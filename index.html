@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{page: 'home', dark: localStorage.getItem('mode') === 'dark'}" :class="{'dark': dark}" style="scroll-behavior: smooth;">
+<head>
+  <meta charset="UTF-8">
+  <title>Stefen Sutandi Portfolio</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body, html { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; }
+    .glass { background: rgba(255,255,255,0.82); backdrop-filter: blur(18px); }
+    .glass-dark { background: rgba(30,34,54,0.92); }
+    .icon-sat { transition: transform 0.18s, box-shadow 0.2s;}
+    .icon-sat:hover { transform: scale(1.13) translateY(-2px); box-shadow: 0 2px 18px 0 #3b82f6;}
+    ::-webkit-scrollbar { width: 0px; background: transparent;}
+    /* Modern fade-in for section */
+    [x-show] { transition: opacity 0.4s, transform 0.6s;}
+    [x-show="true"] { opacity: 1; transform: translateX(0);}
+    [x-show="false"] { opacity: 0; transform: translateX(50px);}
+    /* Light/dark body bg */
+    body { transition: background .34s, color .18s; }
+    .floating-contact-bar img { border-radius: 0; box-shadow: none; background: none;}
+    .floating-contact-bar a:hover img { filter: brightness(1.13) saturate(1.15) drop-shadow(0 2px 8px #47a1ff26);}
+  </style>
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.effect(() => {
+        if (Alpine.raw(dark)) {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('mode', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('mode', 'light');
+        }
+      });
+    });
+  </script>
+</head>
+<body class="bg-gradient-to-br from-[#131722] to-[#202438] dark:from-[#181a22] dark:to-[#171a1f] min-h-screen relative">
+
+  <!-- NAVBAR -->
+  <nav
+    class="fixed w-full z-30 flex items-center px-4 sm:px-10 py-2 sm:py-3 top-0
+      bg-white/80 dark:bg-[#232532]/85 backdrop-blur-xl
+      border-b border-slate-200 dark:border-slate-900
+      shadow-sm transition-all duration-300"
+    style="backdrop-filter: blur(18px);"
+    x-data="{ mobileMenu: false }"
+  >
+  <div class="flex flex-row items-center w-full">
+    <div class="flex-1 font-black text-xl sm:text-2xl tracking-wide text-slate-900 dark:text-white pl-1">
+      Stefen Sutandi
+    </div>
+    <button
+      class="sm:hidden flex items-center justify-center rounded-lg p-2 ml-2 transition focus:outline-none"
+      @click="mobileMenu = !mobileMenu"
+      :aria-expanded="mobileMenu"
+      aria-label="Open main menu"
+    >
+      <svg x-show="!mobileMenu" class="w-8 h-8 text-blue-700 dark:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16"></path></svg>
+      <svg x-show="mobileMenu" class="w-8 h-8 text-blue-700 dark:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <ul class="hidden sm:flex space-x-2 sm:space-x-6 font-bold text-lg items-center">
+      <li>
+        <button
+          :class="page=='home' ? 'bg-blue-500 text-white shadow-lg' : 'hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300'"
+          class="px-6 py-2 rounded-full transition font-bold"
+          @click="page='home'"
+        >Home</button>
+      </li>
+      <li>
+        <button :class="page=='experience' ? 'bg-blue-500 text-white shadow-lg' : 'hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300'" class="px-6 py-2 rounded-full transition font-bold" @click="page='experience'">Experience</button>
+      </li>
+      <li>
+        <button :class="page=='skills' ? 'bg-blue-500 text-white shadow-lg' : 'hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300'" class="px-6 py-2 rounded-full transition font-bold" @click="page='skills'">Skills</button>
+      </li>
+      <li>
+        <button :class="page=='projects' ? 'bg-blue-500 text-white shadow-lg' : 'hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300'" class="px-6 py-2 rounded-full transition font-bold" @click="page='projects'">Projects</button>
+      </li>
+      <li>
+        <button :class="page=='awards' ? 'bg-blue-500 text-white shadow-lg' : 'hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300'" class="px-6 py-2 rounded-full transition font-bold" @click="page='awards'">Awards</button>
+      </li>
+    </ul>
+    <!-- MOBILE MENU -->
+    <div
+      class="sm:hidden absolute left-0 top-[60px] w-full bg-white/80 dark:bg-[#232532]/85 backdrop-blur-xl border-b border-slate-300 dark:border-slate-700 shadow-lg z-40"
+      x-show="mobileMenu"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0 -translate-y-3"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      @click.away="mobileMenu = false"
+    >
+      <ul class="flex flex-col w-full py-3 font-bold text-lg">
+        <li><button @click="page='home'; mobileMenu=false" class="px-6 py-2 w-full text-left hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300">Home</button></li>
+        <li><button @click="page='experience'; mobileMenu=false" class="px-6 py-2 w-full text-left hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300">Experience</button></li>
+        <li><button @click="page='skills'; mobileMenu=false" class="px-6 py-2 w-full text-left hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300">Skills</button></li>
+        <li><button @click="page='projects'; mobileMenu=false" class="px-6 py-2 w-full text-left hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300">Projects</button></li>
+        <li><button @click="page='awards'; mobileMenu=false" class="px-6 py-2 w-full text-left hover:bg-blue-100 dark:hover:bg-slate-700 dark:hover:text-white text-blue-600 dark:text-blue-300">Awards</button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="pt-28 pb-32 min-h-screen flex flex-col items-center relative">
+
+    <!-- HOME/ABOUT -->
+    <section
+      x-show="page=='home'"
+      class="w-full max-w-3xl mx-auto flex flex-col md:flex-row items-center bg-white/80 dark:bg-[#222335]/80 shadow-xl rounded-3xl p-4 sm:p-8 gap-6 sm:gap-10 mt-4 sm:mt-10"
+      x-transition
+    >
+      <!-- Profile -->
+      <div class="flex flex-col items-center md:items-start w-full md:w-auto">
+        <img src="profile-photo.png" alt="Profile"
+          class="rounded-full w-32 h-32 sm:w-48 sm:h-48 object-cover border-4 border-blue-300 shadow-lg mb-4"/>
+        <div class="flex gap-2 sm:gap-4 mt-3 sm:mt-7">
+          <img src="itb_logo.png" alt="ITB" class="h-10 sm:h-14 bg-white/90 shadow-md rounded-xl p-1 sm:p-2"/>
+          <img src="telkomsel_logo.png" alt="Telkomsel" class="h-10 sm:h-14 bg-white/90 shadow-md rounded-xl p-1 sm:p-2"/>
+          <img src="oppstar_logo.png" alt="Oppstar" class="h-10 sm:h-14 bg-white/90 shadow-md rounded-xl p-1 sm:p-2"/>
+        </div>
+      </div>
+      <!-- Bio -->
+      <div class="flex-1 w-full mt-4 md:mt-0">
+        <h1 class="font-black text-3xl sm:text-5xl text-slate-800 dark:text-white mb-2 text-center md:text-left">Stefen Sutandi</h1>
+        <div class="text-blue-600 font-semibold text-lg sm:text-xl mb-2 text-center md:text-left">
+          Final Year EE @ ITB <span class="mx-2">|</span> System Engineer @ Oppstar <span class="mx-2">|</span> Data Scientist @ Telkomsel
+        </div>
+        <div class="text-base sm:text-lg text-slate-700 dark:text-slate-300 mb-3 max-w-2xl text-center md:text-left leading-relaxed">
+          Highly motivated and results-oriented Electrical Engineering student at Bandung Institute of Technology. Passionate about IoT, Data Analysis, Product Management, and Business Development. Proven ability to lead teams, manage projects, and develop innovative solutions.
+        </div>
+        <!-- Stats -->
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-7 mt-2 justify-center md:justify-start">
+          <div class="bg-gradient-to-tr from-blue-400 to-blue-600 text-white shadow-xl rounded-2xl px-6 sm:px-8 py-5 flex flex-col items-center">
+            <span class="font-black text-2xl sm:text-3xl">3+</span>
+            <span class="font-semibold text-base sm:text-sm">Years Experience</span>
+          </div>
+          <div class="bg-gradient-to-tr from-blue-400 to-blue-600 text-white shadow-xl rounded-2xl px-6 sm:px-8 py-5 flex flex-col items-center">
+            <span class="font-black text-2xl sm:text-3xl">10+</span>
+            <span class="font-semibold text-base sm:text-sm">Projects Completed</span>
+          </div>
+          <div class="bg-gradient-to-tr from-blue-400 to-blue-600 text-white shadow-xl rounded-2xl px-6 sm:px-8 py-5 flex flex-col items-center">
+            <span class="font-black text-2xl sm:text-3xl">2026</span>
+            <span class="font-semibold text-base sm:text-sm">Expected Graduation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE (MODERN TIMELINE) -->
+    <section 
+      x-show="page=='experience'" 
+      class="w-full max-w-4xl mx-auto flex flex-col items-center py-10 sm:py-16 min-h-[calc(100vh-180px)] mb-10 md:mb-14"
+      x-transition
+    >
+      <h2 class="font-black text-4xl text-slate-900 dark:text-white mb-10 text-center">
+        Work Experience
+      </h2>
+      <div class="flex flex-col gap-y-8 w-full"> <!-- antar card -->
+        <!-- Timeline Card 1 -->
+        <div class="flex items-start gap-4 sm:gap-7 mb-0 relative z-10">
+          <div class="flex flex-col items-center z-20">
+            <div class="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+              <!-- Icon suitcase/briefcase -->
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <rect x="3.8" y="7.5" width="16.4" height="9" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 16v-2a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 w-full">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <span class="font-bold text-lg text-slate-900 dark:text-white">System Engineer</span>
+              <span class="text-blue-600 font-semibold text-sm ml-0 sm:ml-2">Oppstar Berhad (Penang, Malaysia)</span>
+              <span class="sm:ml-auto text-xs italic text-slate-500">Jul 2025 – Present</span>
+            </div>
+            <div class="text-slate-700 dark:text-slate-300 mt-1 text-base">Part-time</div>
+            <ul class="list-disc ml-5 mt-2 text-base text-slate-700 dark:text-slate-300 space-y-1">
+              <li>Prototyping embedded systems for smart city infrastructure.</li>
+              <li>Using Python, C++, and hardware interfacing.</li>
+              <li>Collaborating in a hybrid, international engineering team.</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Timeline Card 2 -->
+        <div class="flex items-start gap-4 sm:gap-7 mb-0 relative z-10">
+          <div class="flex flex-col items-center z-20">
+            <div class="bg-pink-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+              <!-- Icon checkmark circle -->
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.7" />
+                <path stroke-linecap="round" stroke-width="2" d="M8.5 12.2l2.1 2.1 4.7-4.7"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 w-full">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <span class="font-bold text-lg text-slate-900 dark:text-white">Data Scientist</span>
+              <span class="text-pink-600 font-semibold text-sm ml-0 sm:ml-2">Telkomsel</span>
+              <span class="sm:ml-auto text-xs italic text-slate-500">Jun 2025 – Present</span>
+            </div>
+            <div class="text-slate-700 dark:text-slate-300 mt-1 text-base">Internship</div>
+            <ul class="list-disc ml-5 mt-2 text-base text-slate-700 dark:text-slate-300 space-y-1">
+              <li>Drove optimization by identifying top 10% problem network cells.</li>
+              <li>Engineered model pinpointing 50,000+ underperforming cells.</li>
+              <li>Proved over 50% of network issues were capacity-related.</li>
+              <li>Redirected engineering focus to the top 50% issues (Elevating City Experience/KQI).</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Timeline Card 3 -->
+        <div class="flex items-start gap-4 sm:gap-7 mb-0 relative z-10">
+          <div class="flex flex-col items-center z-20">
+            <div class="bg-yellow-400 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+              <!-- Icon chart bar -->
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <rect x="6" y="10" width="3" height="7" rx="1.2" stroke="currentColor"/>
+                <rect x="11" y="7" width="3" height="10" rx="1.2" stroke="currentColor"/>
+                <rect x="16" y="13" width="3" height="4" rx="1.2" stroke="currentColor"/>
+              </svg>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 w-full">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <span class="font-bold text-lg text-slate-900 dark:text-white">Head of Problem-Solving with Programming</span>
+              <span class="text-yellow-500 font-semibold text-sm ml-0 sm:ml-2">STEI ITB</span>
+              <span class="sm:ml-auto text-xs italic text-slate-500">Feb 2025 – Jun 2025</span>
+            </div>
+            <div class="text-slate-700 dark:text-slate-300 mt-1 text-base">Contract</div>
+            <ul class="list-disc ml-5 mt-3 text-base text-slate-700 dark:text-slate-300 space-y-1">
+              <li>Supervised a team of 15 laboratory assistants, preparing ToRs, recruitment, training, and managing day-to-day operations.</li>
+              <li>Guided 120+ students in programming, data manipulation, and algorithm fundamentals.</li>
+              <li>Coordinated with staff, technicians, assistants, and students for smooth lab operations.</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Timeline Card 4 -->
+        <div class="flex items-start gap-4 sm:gap-7 mb-0 relative z-10">
+          <div class="flex flex-col items-center z-20">
+            <div class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+              <!-- Icon flask/lab -->
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                <path d="M9 3v4.5M15 3v4.5M7 7.5h10M6.7 7.5l1.85 4.6c.16.39.25.8.25 1.22V18a2 2 0 002 2h2a2 2 0 002-2v-4.68c0-.42.09-.83.25-1.22l1.85-4.6" stroke="currentColor"/>
+              </svg>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 w-full">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <span class="font-bold text-lg text-slate-900 dark:text-white">Electronics Laboratory Assistant</span>
+              <span class="text-green-500 font-semibold text-sm ml-0 sm:ml-2">STEI ITB</span>
+              <span class="sm:ml-auto text-xs italic text-slate-500">Feb 2025 – Jun 2025</span>
+            </div>
+            <div class="text-slate-700 dark:text-slate-300 mt-1 text-base">Contract</div>
+            <ul class="list-disc ml-5 mt-3 text-base text-slate-700 dark:text-slate-300 space-y-1">
+              <li>Assisted 120+ students on diodes, BJTs, MOSFETs, and transformer labs.</li>
+              <li>Supported students with experiments and troubleshooting.</li>
+              <li>Maintained lab equipment and prepared sessions.</li>
+            </ul>
+          </div>
+        </div>
+        <!-- Timeline Card 5 -->
+        <div class="flex items-start gap-4 sm:gap-7 mb-0 relative z-10">
+          <div class="flex flex-col items-center z-20">
+            <div class="bg-purple-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+              <!-- Icon cpu -->
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor"/>
+                <path d="M12 9v6M9 12h6" stroke="currentColor"/>
+              </svg>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 w-full">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <span class="font-bold text-lg text-slate-900 dark:text-white">RTL Engineer</span>
+              <span class="text-purple-600 font-semibold text-sm ml-0 sm:ml-2">German Operations Research Society</span>
+              <span class="sm:ml-auto text-xs italic text-slate-500">Feb 2025 – Apr 2025</span>
+            </div>
+            <div class="text-slate-700 dark:text-slate-300 mt-1 text-base">Freelance</div>
+            <ul class="list-disc ml-5 mt-3 text-base text-slate-700 dark:text-slate-300 space-y-1">
+              <li>Research on High-Level Synthesis (HLS) using Quartus/Vivado.</li>
+              <li>Developed hardware-accelerated crypto functions (C/C++).</li>
+              <li>Analyzed SW vs HW trade-offs, remote collaboration, reporting.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END EXPERIENCE -->
+
+
+    <!-- SKILLS (MODERN CARD GRID) -->
+    <section
+      x-show="page=='skills'"
+      class="w-full max-w-5xl mx-auto flex flex-col items-center py-10 sm:py-16 min-h-[calc(100vh-180px)] mb-10 md:mb-14"
+      x-transition
+    >
+      <h2 class="font-black text-4xl text-slate-900 dark:text-white mb-10 text-center tracking-tight">
+        Technical Skills
+      </h2>
+      <div class="flex flex-col md:grid md:grid-cols-3 gap-y-8 gap-x-8 w-full">
+        <!-- Card 1 -->
+        <div class="rounded-3xl shadow-xl p-7 flex flex-col items-start hover:scale-[1.045] transition-all group relative overflow-hidden border border-white/10 dark:border-slate-700 bg-gradient-to-br from-blue-400 via-blue-400/90 to-blue-600 mb-4 md:mb-0">
+          <div class="text-xl font-bold mb-3 text-white drop-shadow-sm">Embedded & Digital Systems</div>
+          <div class="flex flex-wrap gap-2 mt-1 mb-3">
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-blue-200/80 text-blue-900 shadow">C/C++</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-yellow-200/80 text-yellow-900 shadow">Python</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-purple-300/80 text-purple-900 shadow">VHDL/Verilog</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-slate-200/80 text-slate-900 shadow">Quartus</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-green-200/80 text-green-900 shadow">KiCad</span>
+          </div>
+          <div class="mt-2 text-[0.99rem] italic text-white/80">Level: Advanced</div>
+        </div>
+        <!-- Card 2 -->
+        <div class="rounded-3xl shadow-xl p-7 flex flex-col items-start hover:scale-[1.045] transition-all group relative overflow-hidden border border-white/10 dark:border-slate-700 bg-gradient-to-br from-blue-400 via-blue-400/90 to-blue-600 mb-4 md:mb-0">
+          <div class="text-xl font-bold mb-3 text-slate-900 dark:text-white drop-shadow-sm">Data Science & Analytics</div>
+          <div class="flex flex-wrap gap-2 mt-1 mb-3">
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-blue-200/80 text-blue-900 shadow">Python</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-slate-300/80 text-slate-900 shadow">Pandas</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-cyan-200/80 text-cyan-900 shadow">SQL</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-orange-200/80 text-orange-900 shadow">MATLAB</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-purple-200/80 text-purple-900 shadow">Simulink</span>
+          </div>
+          <div class="mt-2 text-[0.99rem] italic text-slate-900/70 dark:text-white/80">Level: Advanced</div>
+        </div>
+        <!-- Card 3 -->
+        <div class="rounded-3xl shadow-xl p-7 flex flex-col items-start hover:scale-[1.045] transition-all group relative overflow-hidden border border-white/10 dark:border-slate-700 bg-gradient-to-br from-blue-400 via-blue-400/90 to-blue-600 mb-4 md:mb-0">
+          <div class="text-xl font-bold mb-3 text-slate-900 dark:text-white drop-shadow-sm">Project & Product</div>
+          <div class="flex flex-wrap gap-2 mt-1 mb-3">
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-indigo-200/80 text-indigo-900 shadow">Project Management</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-green-200/80 text-green-900 shadow">Product Management</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-blue-200/80 text-blue-900 shadow">Business Development</span>
+            <span class="px-4 py-1 rounded-full text-base font-semibold bg-purple-200/80 text-purple-900 shadow">Team Leadership</span>
+          </div>
+          <div class="mt-2 text-[0.99rem] italic text-slate-900/70 dark:text-white/80">Level: Advanced</div>
+        </div>
+      </div>
+    </section>
+    <!-- END SKILLS -->
+
+
+    <!-- PROJECTS (MODERN CARD + MODAL DETAIL) -->
+    <section
+      x-show="page=='projects'"
+      class="bg-white dark:bg-[#23253a] rounded-3xl shadow-2xl max-w-2xl w-full mx-2 sm:mx-4 p-4 sm:p-8 relative"
+      x-transition
+      x-data="{ showModal: false, modalData: null }"
+    >
+      <h2 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-7"
+        Projects
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+    <!-- CARD 1 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-800 to-blue-500 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'PID Controller Optimization for a Magnetic Levitation System',
+        img: 'PID Optimization for Maglev System.png',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Designed & optimized PID controller for nonlinear maglev model.</li>
+          <li>Ziegler-Nichols vs MATLAB Tuner, overshoot 62% → 6.3%.</li>
+          <li>Stability by root locus, Bode, digital pole placement.</li>
+        </ul>
+        `,
+        skills: ['MATLAB', 'Simulink', 'Control System', 'Pandas']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">PID Controller Optimization for Maglev</div>
+      <div class="text-white/80 mb-2">Optimizing PID for magnetic levitation system using MATLAB & Simulink. Reduced overshoot from 62% → 6.3%.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 2 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-blue-800 to-blue-400 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'Hybrid Power Grid Stability & Protection',
+        img: 'LAP_E1.pdf',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Simulated grid stability/fault in hybrid renewable (Coal, Hydro, Solar, Wind).</li>
+          <li>Breaker timing, blackout risk, AVR generator, solar planning.</li>
+          <li>MATLAB, Simulink, and SCADA.</li>
+        </ul>
+        `,
+        skills: ['MATLAB', 'Simulink', 'SCADA']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">Hybrid Power Grid Stability</div>
+      <div class="text-white/80 mb-2">Simulated grid faults, recovery, and optimal planning in hybrid renewable system. MATLAB/SCADA/Simulink.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 3 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-900 to-blue-500 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'Intelligent Composting System: IoT for Berkeley Compost',
+        img: 'TUSUR.png',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Embedded control system using ESP32, Fuzzy Logic, mobile app.</li>
+          <li>Automated aeration & moisture for organic waste. Kotlin app for remote control.</li>
+          <li>2nd Place Best Report TUSUR Winter School.</li>
+        </ul>
+        `,
+        skills: ['ESP32', 'Kotlin', 'IoT', 'Automation']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">Intelligent Composting System (IoT)</div>
+      <div class="text-white/80 mb-2">Embedded ESP32, fuzzy control, automation for organic waste. 2nd place, TUSUR Winter School.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 4 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-800 to-blue-500 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'Synthesizable MIPS32® Microprocessor (VHDL)',
+        img: 'PCB_Design.png',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Developed, simulated, and tested full MIPS32 core in VHDL.</li>
+          <li>Includes control unit, ALU, register file, full testbench. Quartus & Modelsim.</li>
+        </ul>
+        `,
+        skills: ['VHDL', 'Quartus', 'Digital Design']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">Synthesizable MIPS32 Microprocessor</div>
+      <div class="text-white/80 mb-2">Full MIPS32 CPU in VHDL, simulation & testbench, hardware design & verification.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 5 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-800 to-blue-400 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'DC-DC Converter: Boost Converter',
+        img: 'EL3009_Project Boost Converter_13222091.pdf',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Designed and analyzed a Boost Converter to efficiently step up input voltage to a higher output voltage.</li>
+          <li>Component selection, circuit simulation, oscilloscope test to optimize performance.</li>
+          <li>Analyzed efficiency, output stability, and ripple voltage for system optimization.</li>
+        </ul>
+        `,
+        skills: ['Electronics', 'Oscilloscope', 'Power Electronics']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">DC-DC Converter: Boost Converter</div>
+      <div class="text-white/80 mb-2">Step-up converter, oscilloscope test, power electronics & system optimization.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 6 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-blue-900 to-blue-500 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'PPG Signal Filter for Cardiovascular Health',
+        img: 'EL3009_Project PPG_13222091.pdf',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>PPG heart rate monitor, digital filtering, artifact/noise reduction.</li>
+          <li>DSP for biomedical signals, hardware design.</li>
+        </ul>
+        `,
+        skills: ['DSP', 'Filter Design', 'Electronics']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">PPG Signal Filter</div>
+      <div class="text-white/80 mb-2">PPG heart rate monitor, DSP, digital filters, artifact/noise reduction for accurate biomedical readings.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 7 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-800 to-blue-500 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'Oscillator: Colpitts Oscillator Design',
+        img: 'EL3009_Project Osilator RC_13222091.pdf',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Designed and simulated an RC Oscillator for generating stable sinusoidal signals.</li>
+          <li>Oscilloscope test for frequency/distorition analysis and signal quality optimization.</li>
+          <li>Hands-on with circuit design, signal processing, and practical electronics.</li>
+        </ul>
+        `,
+        skills: ['Oscillator', 'Signal Processing', 'Electronics']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">Oscillator: Colpitts Oscillator Design</div>
+      <div class="text-white/90 mb-2">RC oscillator, simulation & oscilloscope test for stable frequency signals.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 8 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-900 to-blue-500 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'Database Clinic Management using C, GTK4',
+        img: 'Main Menu.png',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Led development of clinic management system in C, GTK4 frontend.</li>
+          <li>CRUD, patient records, treatment/diagnosis and reporting.</li>
+          <li>Improved efficiency for medical data management and clinic workflow.</li>
+        </ul>
+        `,
+        skills: ['C', 'GTK4', 'Software Dev', 'Database']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">Database Clinic Management using C, GTK4</div>
+      <div class="text-white/90 mb-2">Patient management app for clinics, GTK4 frontend, full CRUD and reporting.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 9 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-800 to-blue-500 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'PCB-Based BJT Amplifier',
+        img: 'PCB_Design.png',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>Complete cycle: simulation, PCB design (KiCad), soldering, and team management.</li>
+          <li>Audio amplifier from design to working hardware.</li>
+          <li>Solid experience in teamwork, project management, and technical documentation.</li>
+        </ul>
+        `,
+        skills: ['PCB Design', 'KiCad', 'Audio Amplifier', 'Project Management']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">PCB-Based BJT Amplifier</div>
+      <div class="text-white/90 mb-2">Full-cycle amplifier: sim, PCB, soldering, teamwork, audio electronics.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+
+    <!-- CARD 10 -->
+    <div
+      class="rounded-2xl bg-gradient-to-br from-slate-900 to-blue-400 text-white p-7 shadow-xl flex flex-col hover:scale-[1.04] transition-all cursor-pointer"
+      @click="showModal=true; modalData={
+        title: 'Integer Calculator in Finite Field (FPGA, Cyclone IV)',
+        img: 'EL2002 - Kelompok 14 : Kalkulator Integer.png',
+        desc: `
+        <ul class='list-disc pl-5 text-left'>
+          <li>FPGA-based calculator: addition, subtraction, multiplication, division, and number conversions.</li>
+          <li>Efficient digital design using VHDL, full synthesis and test on Cyclone IV board.</li>
+          <li>Focus on accuracy, optimization, and digital logic skills.</li>
+        </ul>
+        `,
+        skills: ['FPGA', 'VHDL', 'Digital Logic', 'Quartus']
+      }"
+    >
+      <div class="font-bold text-xl mb-2">Integer Calculator in Finite Field (FPGA, Cyclone IV)</div>
+      <div class="text-white/90 mb-2">FPGA calc: full arithmetic & digital design, tested on Cyclone IV.</div>
+      <button class="text-blue-100 underline mt-auto font-semibold">See Details →</button>
+    </div>
+    </section>
+    <!-- END PROJECTS -->
+
+    <!-- AWARDS & CERTIFICATIONS MODERN -->
+    <section 
+      x-show="page=='awards'" 
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+      x-transition
+    >
+      <h2 class="font-black text-4xl text-center text-slate-900 dark:text-white mb-10 tracking-tight">Awards & Certifications</h2>
+      <div class="flex flex-col gap-8">
+        <!-- Award Card 1 -->
+        <div class="flex items-center gap-6 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-[#282100] dark:to-[#473800] rounded-2xl shadow-lg px-7 py-5 border border-yellow-200 dark:border-yellow-900">
+          <span class="text-4xl md:text-5xl select-none">🏆</span>
+          <div>
+            <div class="font-bold text-lg md:text-xl text-yellow-700 dark:text-yellow-300 mb-1">
+              Most Unique & Authentic Business Model
+            </div>
+            <div class="text-base md:text-lg text-slate-700 dark:text-yellow-100/90 mb-1">
+              <span class="font-medium text-slate-900 dark:text-yellow-100">EL4062: Engineering Innovation and Entrepreneurship</span> – STEI ITB · Jun 2025
+            </div>
+            <div class="text-xs md:text-sm text-slate-500 dark:text-yellow-200/70">Recognized for innovative business modeling in final startup course.</div>
+          </div>
+        </div>
+        <!-- Award Card 2 -->
+        <div class="flex items-center gap-6 bg-gradient-to-r from-gray-50 to-slate-100 dark:from-[#222225] dark:to-[#37374d] rounded-2xl shadow-lg px-7 py-5 border border-slate-200 dark:border-slate-700">
+          <span class="text-4xl md:text-5xl select-none">🥈</span>
+          <div>
+            <div class="font-bold text-lg md:text-xl text-indigo-700 dark:text-indigo-200 mb-1">
+              2nd Place Best Report of Final Project
+            </div>
+            <div class="text-base md:text-lg text-slate-700 dark:text-slate-100 mb-1">
+              <span class="font-medium text-slate-900 dark:text-slate-100">TUSUR University Winter School</span> · Apr 2025
+            </div>
+            <div class="text-xs md:text-sm text-slate-500 dark:text-slate-400/80">Awarded for engineering research & smart compost IoT solution.</div>
+          </div>
+        </div>
+        <!-- Add more awards as needed! -->
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING CONTACT BAR MODERN -->
+  <div class="fixed left-1/2 -translate-x-1/2 bottom-4 z-50 select-none w-full max-w-xs sm:max-w-md"
+  style="pointer-events:none">
+  <div class="bg-white/95 dark:bg-[#222335]/90 shadow-xl rounded-full px-4 sm:px-10 py-2 sm:py-3 flex items-center gap-5 sm:gap-8"
+    style="pointer-events:auto;backdrop-filter:blur(8px)">
+  <div class="fixed left-1/2 -translate-x-1/2 bottom-9 z-50 select-none"
+      style="pointer-events:none">
+    <div class="bg-white/95 dark:bg-[#222335]/90 shadow-xl rounded-full px-10 py-3 flex items-center gap-10 sm:gap-8"
+        style="pointer-events:auto;backdrop-filter:blur(8px)">
+      <a href="https://github.com/stefensutandi" target="_blank" title="GitHub" class="icon-sat">
+        <img src="github.png" alt="GitHub" class="w-12 h-12 sm:w-10 sm:h-10 object-contain"/>
+      </a>
+      <a href="https://linkedin.com/in/stefensutandi" target="_blank" title="LinkedIn" class="icon-sat">
+        <img src="linkedin.png" alt="LinkedIn" class="w-12 h-12 sm:w-10 sm:h-10 object-contain"/>
+      </a>
+      <a href="mailto:stefen.sutandi@email.com" target="_blank" title="Gmail" class="icon-sat">
+        <img src="gmail.png" alt="Gmail" class="w-12 h-12 sm:w-10 sm:h-10 object-contain"/>
+      </a>
+      <a href="https://instagram.com/stefensutandi" target="_blank" title="Instagram" class="icon-sat">
+        <img src="instagram.png" alt="Instagram" class="w-12 h-12 sm:w-10 sm:h-10 object-contain"/>
+      </a>
+      <a href="https://open.spotify.com/user/212e4a7q2qdqxe7cggrj4nebq?si=9b7baa5509bf4e2a" target="_blank" title="Spotify" class="icon-sat">
+        <img src="spotify.png" alt="Spotify" class="w-12 h-12 sm:w-10 sm:h-10 object-contain"/>
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="text-center py-7 mt-16 text-slate-500 dark:text-slate-400">
+    &copy; 2025 Stefen Sutandi. All Rights Reserved.
+  </footer>
+</body>
+</html>
