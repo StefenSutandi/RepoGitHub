@@ -377,6 +377,30 @@ function ExperiencePage() {
         "Coordinated with staff, technicians, assistants, and students for smooth lab operations.",
       ],
     },
+    {
+      title: "Electronics Laboratory Assistant",
+      company: "STEI ITB",
+      period: "Feb 2025 – Jun 2025",
+      type: "Contract",
+      color: "from-green-500 to-teal-500",
+      description: [
+        "Assisted 120+ students on diodes, BJTs, MOSFETs, and transformer labs.",
+        "Supported students with experiments and troubleshooting.",
+        "Maintained lab equipment and prepared sessions.",
+      ],
+    },
+    {
+      title: "RTL Engineer",
+      company: "German Operations Research Society",
+      period: "Feb 2025 – Apr 2025",
+      type: "Freelance",
+      color: "from-purple-500 to-indigo-500",
+      description: [
+        "Research on High-Level Synthesis (HLS) using Quartus/Vivado.",
+        "Developed hardware-accelerated crypto functions (C/C++).",
+        "Analyzed SW vs HW trade-offs, remote collaboration, reporting.",
+      ],
+    },
   ]
 
   return (
@@ -558,6 +582,30 @@ function ProjectsPage() {
         "PPG heart rate monitor, DSP, digital filters, artifact/noise reduction for accurate biomedical readings.",
       skills: ["DSP", "Filter Design", "Electronics"],
       color: "from-pink-500 to-rose-500",
+    },
+    {
+      title: "Oscillator: Colpitts Oscillator Design",
+      description: "RC oscillator, simulation & oscilloscope test for stable frequency signals.",
+      skills: ["Oscillator", "Signal Processing", "Electronics"],
+      color: "from-cyan-500 to-blue-500",
+    },
+    {
+      title: "Database Clinic Management using C, GTK4",
+      description: "Patient management app for clinics, GTK4 frontend, full CRUD and reporting.",
+      skills: ["C", "GTK4", "Software Dev", "Database"],
+      color: "from-emerald-500 to-green-500",
+    },
+    {
+      title: "PCB-Based BJT Amplifier",
+      description: "Full-cycle amplifier: sim, PCB, soldering, teamwork, audio electronics.",
+      skills: ["PCB Design", "KiCad", "Audio Amplifier", "Project Management"],
+      color: "from-amber-500 to-yellow-500",
+    },
+    {
+      title: "Integer Calculator in Finite Field (FPGA, Cyclone IV)",
+      description: "FPGA calc: full arithmetic & digital design, tested on Cyclone IV.",
+      skills: ["FPGA", "VHDL", "Digital Logic", "Quartus"],
+      color: "from-violet-500 to-purple-500",
     },
   ]
 
